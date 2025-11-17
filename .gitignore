@@ -1,0 +1,112 @@
+**/.idea/
+**/node_modules/
+# -------------------------- 全局通用忽略 --------------------------
+# 系统临时文件
+.DS_Store          # Mac 系统
+Thumbs.db          # Windows 系统
+*.tmp
+*.temp
+
+# 日志与缓存
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.cache/
+.eslintcache
+
+# 敏感信息与环境变量
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+.env.*.local
+*.pem              # 密钥文件
+config/local.js    # 本地配置文件（如果有）
+
+# -------------------------- 前端/Node.js 项目忽略 --------------------------
+# 依赖文件夹
+node_modules/
+bower_components/
+pnpm-lock.yaml    # pnpm 锁文件（如果用 pnpm，可保留；不用则忽略）
+yarn.lock         # yarn 锁文件（建议保留，确保依赖版本一致）
+package-lock.json # npm 锁文件（建议保留）
+
+# 构建产物
+dist/
+build/
+dist-ssr/
+*.spa
+*.app
+
+# IDE 配置
+.idea/            # JetBrains 系列（WebStorm、IDEA 等）
+.vscode/          # VSCode 本地配置（如 launch.json、settings.json，团队共享的可单独提交）
+.sublime-*        # Sublime 配置
+*.sublime-project
+*.sublime-workspace
+
+# -------------------------- 后端项目忽略（根据后端语言补充） --------------------------
+# Java
+target/
+*.jar
+*.war
+*.ear
+*.class
+.gradle/
+build/
+
+# Python
+__pycache__/
+venv/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Go
+vendor/
+*.exe
+*.dll
+*.so
+*.a
+dist/
+build/
+
+# PHP
+vendor/
+composer.lock
+*.phpc
+.php_cs.cache
+.php_cs.dist
+.env
+
+# -------------------------- 小程序项目忽略 --------------------------
+# 微信开发者工具相关
+unpackage/        # 小程序打包/编译目录
+miniprogram_npm/  # 小程序 npm 依赖构建产物
+.wechatide/       # 开发者工具缓存
+*.sitemap.json    # 本地生成的 sitemap（如果是手动配置的可保留）
+project.private.config.json # 小程序私有配置（本地调试配置）
+
+# 小程序 IDE 临时文件
+.idea/            # 若小程序用 WebStorm 开发
+.vscode/          # 若用 VSCode 开发
