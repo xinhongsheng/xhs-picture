@@ -1,0 +1,12 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+#    session:
+#      cookie:
+#        max-age: 2592000
+spring:
+  application:
+    name: xhs-picture-backend
+  profiles:
+    active: dev
