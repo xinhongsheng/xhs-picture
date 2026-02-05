@@ -29,16 +29,16 @@
       </a-space>
     </div>
 
-    <!-- 图片列表 -->
-    <!-- 图片列表 -->
-<PictureList :dataList="dataList" :loading="loading" />
-<a-pagination
-  style="text-align: right"
-  v-model:current="searchParams.current"
-  v-model:pageSize="searchParams.pageSize"
-  :total="total"
-  @change="onPageChange"
-/>
+  <!-- 图片列表 -->
+    <PictureList :dataList="dataList" :loading="loading"  />
+    <!-- 分页 -->
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="onPageChange"
+    />
 
   </div>
 </template>
@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { listPictureVoByPageUsingPost ,listPictureTagCategoryUsingGet } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
-import { computed, onMounted, reactive, ref } from 'vue'
+import {  onMounted, reactive, ref } from 'vue'
 import PictureList from '@/components/PictureList.vue'
 //数据
 const dataList = ref([])
@@ -62,19 +62,11 @@ const searchParams = reactive<API.PictureQueryRequest>({
 })
 
 // 分页参数
-const pagination = computed(() => {
-  return {
-    current: searchParams.current ?? 1,
-    pageSize: searchParams.pageSize ?? 10,
-    total: total.value,
-    // 切换页号时，会修改搜索参数并获取数据
-    onChange: (page, pageSize) => {
-      searchParams.current = page
-      searchParams.pageSize = pageSize
-      fetchData()
-    },
-  }
-})
+const onPageChange = (page: number, pageSize: number) => {
+  searchParams.current = page
+  searchParams.pageSize = pageSize
+  fetchData()
+}
 
 // 获取数据
 const fetchData = async () => {
@@ -126,13 +118,6 @@ const getTagCategoryOptions = async () => {
   }
 }
 
-const router = useRouter()
-// 跳转至图片详情
-const doClickPicture = (picture) => {
-  router.push({
-    path: `/picture/${picture.id}`,
-  })
-}
 
 
 // 页面加载时请求一次

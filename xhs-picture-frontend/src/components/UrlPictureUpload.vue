@@ -1,12 +1,17 @@
 <template>
   <div class="url-picture-upload">
-  <a-input-group compact style="margin-bottom: 16px">
-    <a-input v-model:value="fileUrl" style="width: calc(100% - 120px)" placeholder="请输入图片 URL" />
-    <a-button type="primary" :loading="loading" @click="handleUpload" style="width: 120px">提交</a-button>
-  </a-input-group>
-  <img v-if="picture?.url" :src="picture?.url" alt="avatar" />
-</div>
-
+    <a-input-group compact style="margin-bottom: 16px">
+      <a-input
+        v-model:value="fileUrl"
+        style="width: calc(100% - 120px)"
+        placeholder="请输入图片 URL"
+      />
+      <a-button type="primary" :loading="loading" @click="handleUpload" style="width: 120px"
+        >提交</a-button
+      >
+    </a-input-group>
+    <img v-if="picture?.url" :src="picture?.url" alt="avatar" />
+  </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
@@ -17,10 +22,10 @@ import type { API } from '@/api/typings.d.ts'
 
 interface Props {
   picture?: API.PictureVO
+  spaceId?: number // 新增：接收父组件传递的空间ID
   onSuccess?: (newPicture: API.PictureVO) => void
 }
 const props = defineProps<Props>()
-
 
 const loading = ref<boolean>(false)
 const fileUrl = ref<string>()
@@ -32,6 +37,8 @@ const handleUpload = async () => {
   loading.value = true
   try {
     const params: API.PictureUploadRequest = { fileUrl: fileUrl.value }
+    //新增空间SpaceId参数
+    params.spaceId = props.spaceId
     if (props.picture) {
       params.id = props.picture.id
     }
@@ -44,19 +51,14 @@ const handleUpload = async () => {
       message.error('图片上传失败，' + res.data.message)
     }
   } catch (error) {
-    message.error('图片上传失败',error)
-  } finally {
-    loading.value = false
+    console.error('图片上传失败', error)
+    message.error('图片上传失败，' + error.message)
   }
+  loading.value = false
 }
-
-
 </script>
 
-
 <style scoped>
-.url-picture-upload{
-
+.url-picture-upload {
 }
-
 </style>

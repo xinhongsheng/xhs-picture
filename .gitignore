@@ -1,5 +1,13 @@
 **/.idea/
 **/node_modules/
+**/.trae/
+
+.idea/
+.trae/
+
+.vscode/
+.cursor/
+.kiro/
 # -------------------------- 全局通用忽略 --------------------------
 # 系统临时文件
 .DS_Store          # Mac 系统
@@ -48,6 +56,8 @@ dist-ssr/
 .sublime-*        # Sublime 配置
 *.sublime-project
 *.sublime-workspace
+application-dev.yml
+application-prod.yml
 
 # -------------------------- 后端项目忽略（根据后端语言补充） --------------------------
 # Java
@@ -58,6 +68,8 @@ target/
 *.class
 .gradle/
 build/
+
+
 
 # Python
 __pycache__/

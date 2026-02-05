@@ -25,20 +25,24 @@
                 <a-avatar :src="loginUserStore.loginUser.userAvatar"></a-avatar>
                 {{ loginUserStore.loginUser.userName ?? '无名' }}
               </a-space>
+              <!-- 关键修改：overlay 内必须是一个完整的 a-menu，所有菜单项放在里面 -->
               <template #overlay>
-                <a-menu-item>
-                  <router-link to="/my_space">
-                    <UserOutlined />
-                    我的空间
-                  </router-link>
-                </a-menu-item>
-
                 <a-menu>
+                  <!-- 统一包裹所有菜单项 -->
+                  <!-- 我的空间：直接放在 a-menu 内 -->
+                  <a-menu-item>
+                    <router-link to="/my_space">
+                      <UserOutlined />
+                      我的空间
+                    </router-link>
+                  </a-menu-item>
+                  <!-- 退出登录：直接放在同一个 a-menu 内，去掉多余的 a-menu 嵌套 -->
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
                   </a-menu-item>
                 </a-menu>
+                <!-- 闭合 a-menu -->
               </template>
             </a-dropdown>
           </div>
@@ -52,14 +56,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { HomeOutlined, LogoutOutlined } from '@ant-design/icons-vue'
+// 补充：导入 UserOutlined 图标（之前代码漏了，会导致图标不显示）
+import { HomeOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { MenuProps } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
-
-import { ref } from 'vue'
+import { ref, h } from 'vue' // 注意：h 函数需要导入（用于渲染图标）
 import { userLoginOutUsingPost } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
+import { useRouter } from 'vue-router' // 补充：导入 useRouter
 
+const router = useRouter() // 初始化 router（之前代码漏了，会导致 router.afterEach 报错）
 const loginUserStore = useLoginUserStore()
 
 const originItems = [
@@ -84,7 +90,6 @@ const originItems = [
     label: '空间管理',
     title: '空间管理',
   },
-
   {
     key: '/add_picture',
     label: '创建图片',
@@ -114,7 +119,6 @@ const filterMenus = (menus = [] as MenuProps['items']) => {
 
 const items = computed(<MenuProps['items']>(() => filterMenus(originItems)))
 
-const router = useRouter()
 // 路由跳转事件
 const doMenuClick = ({ key }: { key: string }) => {
   router.push({
@@ -129,6 +133,8 @@ const doLogout = async () => {
   if (res.data.code === 0) {
     loginUserStore.setLoginUser({
       userName: '',
+      id: '', // 补充：清空 id，避免登录状态判断异常
+      userAvatar: '', // 补充：清空头像
     })
     message.success('退出登录成功')
     router.push({ path: '/user/login' })
@@ -140,11 +146,10 @@ const doLogout = async () => {
 // 当前选中菜单
 const current = ref<string[]>([])
 // 监听路由变化，更新当前选中菜单
-router.afterEach((to, from, next) => {
+router.afterEach((to) => {
   current.value = [to.path]
 })
 </script>
-
 <style scoped>
 .title-bar {
   display: flex;
@@ -159,5 +164,10 @@ router.afterEach((to, from, next) => {
 
 .logo {
   height: 24px;
+}
+
+/* 优化：下拉菜单宽度自适应 */
+:deep(.ant-dropdown-menu) {
+  min-width: 120px;
 }
 </style>
